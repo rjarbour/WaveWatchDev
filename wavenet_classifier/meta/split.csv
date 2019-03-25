@@ -1,0 +1,8 @@
+filename,fold,target,category,esc10,src_file,take
+glass.wav,5,0,glass_breaking,TRUE,9032,A
+siren.wav,5,0,siren,TRUE,9032,A
+horn.wav,5,0,car_horn,TRUE,9032,A
+alarm.wav,5,0,clock_alarm,TRUE,9032,A
+Police_Siren.wav,5,0,siren,TRUE,9032,A
+Siren_Fire_Truck.wav,5,0,siren,TRUE,9032,A
+Classic_Car_Horn.wav,5,0,car_horn,TRUE,9032,A
