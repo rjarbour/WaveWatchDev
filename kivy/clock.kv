@@ -13,8 +13,8 @@
     face: face
     ticks: ticks
     ScatterLayout:
-        size_hint: 1.0, 0.1
-        pos_hint: {'x': 0, 'y': 0.9}
+        size_hint: 1.0, 0.08
+        pos_hint: {'x': 0, 'y': 0.92}
         canvas:
             Color:
                 rgb: 0.2, 0.2, 0.2
@@ -44,7 +44,7 @@
                     allow_stretch: True
 
     ScatterLayout:
-        size_hint: 1.0, 0.9
+        size_hint: 1.0, 0.92
         pos_hint: {'x': 0, 'y': 0.0}
         FloatLayout:
             id: face
@@ -88,7 +88,6 @@
 <CustomPopup>:
     size_hint: .5, .5
     auto_dismiss: False
-    title: 'Hello world'
     Button:
         text: 'Click me to dismiss'
         on_press: root.dismiss()

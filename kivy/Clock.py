@@ -6,7 +6,7 @@ from kivy.uix.boxlayout import BoxLayout
 from math import cos, sin, pi
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import NumericProperty, ListProperty
+from kivy.properties import NumericProperty, ListProperty, BooleanProperty
 from kivy.uix.popup import Popup
 from kivy.core.window import Window
 import datetime
@@ -23,11 +23,21 @@ class ClockApp(FloatLayout):
     pass
 
 class CustomPopup(Popup):
-    pass
+
+    def __init__(self, dismiss_callback, dismiss_check):
+        super().__init__()
+        self.d_callback = dismiss_callback
+        self.d_check = dismiss_check
+
+    def on_dismiss(self):
+        if not self.d_check():
+            self.d_callback()
+        pass
 
 
 class Ticks(Widget):
-    my_list_prop = ListProperty()
+    notification_stack = ListProperty()
+    internal_dismiss = BooleanProperty()
 
     def __init__(self, **kwargs):
         super(Ticks, self).__init__(**kwargs)
@@ -35,6 +45,7 @@ class Ticks(Widget):
         self.bind(size=self.update_clock)
         self._keyboard = Window.request_keyboard(self._keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_key_down)
+        self.internal_dismiss = False
 
     def update_clock(self, *args):
         self.canvas.clear()
@@ -58,8 +69,25 @@ class Ticks(Widget):
     def _on_key_down(self, keyboard, keycode, text, modifiers):
         print("key")
         if keycode[1] == 'w':
-            p = CustomPopup()
+            p = CustomPopup(self.on_popup_dismiss, self.dismiss_check)
+            self.notification_stack.append(p)
+            p.title = "notification {0}".format(len(self.notification_stack))
+            if len(self.notification_stack) > 1:
+                self.internal_dismiss = True
+                self.notification_stack[-2].dismiss()
+                self.internal_dismiss = False
             p.open()
+
+    def dismiss_check(self):
+        return self.internal_dismiss
+
+    def on_popup_dismiss(self):
+        print("dismissed")
+        p = self.notification_stack.pop()
+        del p
+        if len(self.notification_stack) > 0:
+            self.notification_stack[-1].open()
+        pass
 
 class MyClockApp(App):
     def build(self):

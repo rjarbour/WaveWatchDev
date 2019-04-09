@@ -3,10 +3,18 @@ from WaveNetClassifier import WaveNetClassifier
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import matplotlib.pyplot as plt
+import scipy.io.wavfile as sp
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
 sess = tf.Session(config=config)
+
+def scale(X, x_min, x_max):
+    nom = (X-X.min(axis=0))*(x_max-x_min)
+    denom = X.max(axis=0) - X.min(axis=0)
+    denom[denom==0] = 1
+    return x_min + nom/denom
 
 def get_model_memory_usage(batch_size, model):
     import numpy as np
@@ -55,14 +63,20 @@ for index, row in meta.iterrows():
         sound = pydub.AudioSegment.from_wav("audio/{0}".format(row.filename))
         sound = sound.set_channels(1)
     except:
-        raise IOError('Give me an audio  file which I can read!!')
-
+        #raise IOError('Give me an audio  file which I can read!!')
+        continue
     if sound.frame_rate != srate:
         sound = sound.set_frame_rate(srate)
-
+    print(row.filename)
     indexer = np.arange(19200)[None, :] + 1500 * np.arange(20)[:, None]
     sound = sound.raw_data
     sound = np.frombuffer(sound, dtype=np.int16)
+    #sound = np.diff(sound)
+    noise = np.random.normal(sound.max()*-0.03, sound.max()*0.03, sound.shape)
+    sound = sound + noise
+    sound = np.int16(sound / np.max(np.abs(sound)) * 32767)
+    #sp.write("test.wav", 9600, sound)
+    sound = (sound - sound.mean()) / sound.max()
     sound = sound[indexer]
     meme, dank = False, False
     for idx in sound:

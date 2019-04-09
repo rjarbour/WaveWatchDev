@@ -1,0 +1,45 @@
+
+
+<ParentTest>:
+    ScatterLayout:
+        size_hint: 1.0, 0.1
+        pos_hint: {'x': 0, 'y': 0.9}
+        canvas:
+            Color:
+                rgb: 0.2, 0.2, 0.2
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        FloatLayout:
+            size_hint: 1.0, 1.0
+            pos_hint: {'x':0, 'y':0}
+            canvas:
+                Color:
+                    rgb: 0.5, 0.5, 0.5
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Button:
+                size_hint: None, None
+                pos_hint: {'x':0.01}
+                size: self.parent.height * 0.9, self.parent.height * 0.9
+                y: (self.parent.height / 2) - (self.height/2)
+                background_color: 0,0,0,0
+                Image:
+                    source: 'source/gears.png'
+                    y: self.parent.y
+                    x: self.parent.x
+                    size: self.parent.size
+                    allow_stretch: True
+
+    ScatterLayout:
+        size_hint: 1.0, 0.9
+        pos_hint: {'x': 0, 'y': 0.0}
+        canvas:
+            Color:
+                rgb: 0.2, 0.2, 0.2
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+
